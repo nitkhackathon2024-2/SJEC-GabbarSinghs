@@ -5,3 +5,4 @@ clients/__pycache__/
 
 #Keep out sensitive information
 .env
+/__pycache__/

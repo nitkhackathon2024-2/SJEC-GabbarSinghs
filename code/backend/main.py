@@ -1,5 +1,51 @@
 # main.py
 
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
+import asyncio  # For simulating processing time
+
+app = FastAPI()
+
+# Define CORS settings
+origins = [
+    "http://localhost",  # Your frontend's origin
+    "http://localhost:3000",  # Example for React
+    # Add other origins as needed
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # Allow specific origins
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Define the request model
+class TextRequest(BaseModel):
+    raw_text: str
+
+# Define the response model
+class ProcessedResponse(BaseModel):
+    processed_text: str
+    embeddings: list  # Replace with actual data types as needed
+
+@app.post("/api/process", response_model=ProcessedResponse)
+async def process_text(request: TextRequest):
+    try:
+        raw_text = request.raw_text
+        print(raw_text)
+        # Simulate processing delay
+        await asyncio.sleep(1)  # Remove or adjust in production
+
+        # TODO: Replace the following with actual processing logic
+       
+        return "hi"
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 import logging
 import json
 from utils import (
@@ -19,10 +65,10 @@ def main():
     # Initialize Qdrant collection
     initialize_qdrant_collection()
 
-    # Replace this with your actual raw text input
-    raw_text = """
-    Your raw PDF extracted text goes here.
-    """
+    # # Replace this with your actual raw text input
+    # raw_text = """
+    # Your raw PDF extracted text goes here.
+    # """
 
     # Reconstruct formatting using Groq LLM
     formatted_text = reconstruct_formatting(raw_text)

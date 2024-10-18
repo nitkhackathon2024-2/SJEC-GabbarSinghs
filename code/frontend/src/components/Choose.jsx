@@ -1,64 +1,82 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import pdfToText from "react-pdftotext"
-import Tesseract from "tesseract.js"
-import D3visual from "./D3visual"
-import { message } from "antd"
+import { useState, useEffect } from "react";
+import pdfToText from "react-pdftotext";
+import Tesseract from "tesseract.js";
+import D3visual from "./D3visual";
+import { message } from "antd";
+import axios from "axios";
 import {
   treeData as init,
   treeDat as init2,
   treeData2 as init3,
-} from "@/app/utils/treeData"
+} from "@/app/utils/treeData";
 
 const Choose = () => {
-  const [current, setCurrent] = useState("pdf")
-  const [file, setFile] = useState(null)
-  const [treeData, setTreeData] = useState(init3)
+  const [current, setCurrent] = useState("pdf");
+  const [file, setFile] = useState(null);
+  const [textData, setTextData] = useState(null);
+  const [treeData, setTreeData] = useState(null);
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0])
-  }
+    setFile(e.target.files[0]);
+  };
 
   const handleFile = async () => {
     try {
       if (file) {
-        if (current == "pdf") {
-          const text = await pdfToText(file)
-          console.log("text", text)
-          message.success("Successfull")
-        } else if (current == "image") {
-          Tesseract.recognize(file, "eng", {
+        if (current === "pdf") {
+          const text = await pdfToText(file);
+          setTextData(text);
+          console.log("text", text);
+          message.success("Successful");
+        } else if (current === "image") {
+          const {
+            data: { text },
+          } = await Tesseract.recognize(file, "eng", {
             logger: (m) => console.log(m),
-          })
-            .then(({ data: { text } }) => {
-              console.log("text", text)
-              message.success("Successfull")
-            })
-            .catch((err) => {
-              console.log(err)
-              message.error("Failed")
-            })
-        } else if (current == "audio") {
-          console.log("file", file)
-          message.success("Sucessfull")
+          });
+          console.log("text", text);
+          setTextData(text);
+          message.success("Successful");
+        } else if (current === "audio") {
+          console.log("file", file);
+          message.success("Successful");
         }
       }
     } catch (error) {
-      message.error("Failed to convert file.")
+      console.error(error);
+      message.error("Failed to convert file.");
     }
-  }
+  };
+
+  useEffect(() => {
+    const processTextData = async () => {
+      if (textData) {
+        try {
+          const response = await axios.post("http://localhost:8000/api/process", { raw_text: textData });
+          console.log(response.data);
+          /* setTreeData(response.data); */
+        } catch (err) {
+          console.log(err);
+          message.error("Failed to process file.");
+        }
+      }
+    };
+
+    processTextData();
+  }, [textData]);
 
   const handleButtonClick = (type) => {
-    setCurrent(type)
-  }
+    setCurrent(type);
+  };
 
   const buttonClass = (type) =>
     `px-4 py-2 rounded-md w-48 transition-all duration-300 ${
       current === type
         ? "bg-foreground text-background"
         : "bg-accent text-background"
-    }`
+    }`;
 
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-4">
@@ -112,7 +130,7 @@ const Choose = () => {
         <D3visual data={treeData} />
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Choose
+export default Choose;
