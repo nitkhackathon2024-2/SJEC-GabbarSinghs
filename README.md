@@ -1,10 +1,12 @@
-## College Name - Team Name
-Provide details of team members 
+## SJEC, Vamanjore - GabbarSinghs
+- Nihaal Y K - Team Lead
+- Joel Crasta
+- Rachan Karkera
 
 ## Problem Statement
-Provide description of which Theme and Problem statement you are attempting
+*Knowledge Distiller App*
 
 ## Instructions on running your project
-Provide detailed steps to get your project up and running, including any dependencies
+
 
 ## References

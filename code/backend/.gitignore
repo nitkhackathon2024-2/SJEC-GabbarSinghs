@@ -1,0 +1,7 @@
+#Keep out junk and cache files
+utils/__pycache__/
+config/__pycache__/
+clients/__pycache__/
+
+#Keep out sensitive information
+.env
