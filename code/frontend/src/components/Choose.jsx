@@ -54,7 +54,10 @@ const Choose = () => {
     const processTextData = async () => {
       if (textData) {
         try {
-          const response = await axios.post("http://localhost:8000/api/process", { raw_text: textData });
+          const response = await axios.post(
+            "http://localhost:8000/api/process",
+            { raw_text: textData }
+          );
           console.log(response.data);
           /* setTreeData(response.data); */
         } catch (err) {
@@ -63,6 +66,27 @@ const Choose = () => {
         }
       }
     };
+
+    async function processText(rawText) {
+      try {
+        const response = await fetch("http://localhost:8000/api/process", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ raw_text: rawText }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        // Handle the received knowledge graph
+        console.log(data.knowledge_graph);
+        // Update your state or context with the received data
+      } catch (error) {
+        console.error("Error processing text:", error);
+      }
+    }
 
     processTextData();
   }, [textData]);
