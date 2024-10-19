@@ -1,7 +1,3 @@
-Sure! Here's the `README.md` file for your project, following the provided template and including detailed instructions on how to run the project.
-
----
-
 # SJEC, Vamanjoore - GabbarSinghs
 
 - **Team Lead**: Nihaal Y K
@@ -136,7 +132,3 @@ The frontend application should now be running at `http://localhost:3000`.
 - **Qdrant Documentation**: [https://qdrant.tech/documentation/](https://qdrant.tech/documentation/)
 - **MongoDB Documentation**: [https://docs.mongodb.com/](https://docs.mongodb.com/)
 - **Sentence Transformers**: [https://www.sbert.net/](https://www.sbert.net/)
-
----
-
-Feel free to customize and expand upon this README as needed for your project. If you have any questions or need further assistance, let me know!
