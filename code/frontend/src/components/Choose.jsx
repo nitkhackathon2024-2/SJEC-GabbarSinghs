@@ -16,7 +16,7 @@ const Choose = () => {
   const [current, setCurrent] = useState("pdf");
   const [file, setFile] = useState(null);
   const [textData, setTextData] = useState(null);
-  const [treeData, setTreeData] = useState(null);
+  const [treeData, setTreeData] = useState(init3);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -41,7 +41,7 @@ const Choose = () => {
           message.success("Successful");
         } else if (current === "audio") {
           console.log("file", file);
-          message.success("Successful");
+          message.success("Not supported yet");
         }
       }
     } catch (error) {
@@ -58,35 +58,14 @@ const Choose = () => {
             "http://localhost:8000/api/process",
             { raw_text: textData }
           );
-          console.log(response.data);
-          /* setTreeData(response.data); */
+          console.log(response.data.knowledge_graph);
+          setTreeData(response.data.knowledge_graph);
         } catch (err) {
           console.log(err);
           message.error("Failed to process file.");
         }
       }
     };
-
-    async function processText(rawText) {
-      try {
-        const response = await fetch("http://localhost:8000/api/process", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ raw_text: rawText }),
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        // Handle the received knowledge graph
-        console.log(data.knowledge_graph);
-        // Update your state or context with the received data
-      } catch (error) {
-        console.error("Error processing text:", error);
-      }
-    }
 
     processTextData();
   }, [textData]);
@@ -133,7 +112,6 @@ const Choose = () => {
 
       <div className="flex flex-col w-full justify-center items-center">
         <div className="flex flex-col items-center justify-center p-4 rounded-md">
-          <h2 className="text-3xl font-bold">PDF</h2>
           <input
             type="file"
             accept="application/pdf image/* audio/*"

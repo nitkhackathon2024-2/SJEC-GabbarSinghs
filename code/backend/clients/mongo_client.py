@@ -13,7 +13,7 @@ def get_mongo_client():
     Initialize and return the MongoDB client along with the database and collection.
     """
     try:
-        client = MongoClient(MONGODB_URI)
+        client = MongoClient(MONGODB_URI, socketTimeoutMS=60000, connectTimeoutMS=60000)
         db = client['your_database_name']  # Replace with your actual DB name
         collection = db['your_collection_name']  # Replace with your actual collection name
         logger.info("MongoDB client initialized successfully.")

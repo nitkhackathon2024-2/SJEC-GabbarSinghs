@@ -1,9 +1,9 @@
-import { useRef, useState, useEffect } from "react"
-import * as d3 from "d3"
-import Container from "./Container"
+import { useRef, useState, useEffect } from "react";
+import * as d3 from "d3";
+import Container from "./Container";
 
 const D3visual = ({ data }) => {
-  const svgRef = useRef()
+  const svgRef = useRef();
 
   if (!data) {
     return (
@@ -14,37 +14,37 @@ const D3visual = ({ data }) => {
           </p>
         </div>
       </Container>
-    )
+    );
   }
 
   useEffect(() => {
-    const svg = d3.select(svgRef.current)
-    svg.selectAll("*").remove()
+    const svg = d3.select(svgRef.current);
+    svg.selectAll("*").remove();
 
-    const width = 1920
-    const height = 1080
+    const width = 1920;
+    const height = 1080;
 
-    const root = d3.hierarchy(data[0])
+    const root = d3.hierarchy(data);
     const treeLayout = d3
       .tree()
       .size([height, width])
       .nodeSize([20, 400])
-      .separation((a, b) => (a.parent === b.parent ? 1 : 4))
+      .separation((a, b) => (a.parent === b.parent ? 1 : 4));
 
-    treeLayout(root)
+    treeLayout(root);
 
     const zoom = d3
       .zoom()
       .scaleExtent([0.5, 2])
       .on("zoom", (event) => {
-        g.attr("transform", event.transform)
-      })
+        g.attr("transform", event.transform);
+      });
 
-    svg.call(zoom)
+    svg.call(zoom);
 
-    const g = svg.append("g").attr("transform", "translate(40,0)")
+    const g = svg.append("g").attr("transform", "translate(40,0)");
 
-    const color = d3.scaleOrdinal(d3.schemeCategory10)
+    const color = d3.scaleOrdinal(d3.schemeCategory10);
 
     const link = g
       .append("g")
@@ -60,7 +60,7 @@ const D3visual = ({ data }) => {
           .y((d) => d.x)
       )
       .attr("fill", "none")
-      .attr("stroke", (d) => color(d.source.depth))
+      .attr("stroke", (d) => color(d.source.depth));
 
     const node = g
       .append("g")
@@ -68,12 +68,12 @@ const D3visual = ({ data }) => {
       .data(root.descendants())
       .enter()
       .append("g")
-      .attr("transform", (d) => `translate(${d.y},${d.x})`)
+      .attr("transform", (d) => `translate(${d.y},${d.x})`);
 
     node
       .append("circle")
       .attr("r", 5)
-      .attr("fill", (d) => color(d.depth))
+      .attr("fill", (d) => color(d.depth));
 
     node
       .append("text")
@@ -81,8 +81,8 @@ const D3visual = ({ data }) => {
       .attr("x", (d) => (d.children ? -8 : 8))
       .style("text-anchor", (d) => (d.children ? "end" : "start"))
       .style("fill", "#3e363f")
-      .text((d) => d.data.name)
-  }, [data])
+      .text((d) => d.data.name);
+  }, [data]);
 
   return (
     <Container>
@@ -90,7 +90,7 @@ const D3visual = ({ data }) => {
         <svg ref={svgRef} className="w-full h-full"></svg>
       </div>
     </Container>
-  )
-}
+  );
+};
 
-export default D3visual
+export default D3visual;
